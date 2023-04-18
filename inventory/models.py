@@ -6,12 +6,12 @@ class Ingredient(models.Model):
     name = models.CharField(max_length=20)
     quantity = models.IntegerField(default=0)
     unit = models.CharField(max_length=10)
-    unit_price = models.IntegerField()
+    unit_price = models.FloatField()
 
 
 class MenuItem(models.Model):
     title = models.CharField(max_length=30)
-    price = models.IntegerField()
+    price = models.FloatField()
     image_url = models.URLField(max_length=200, null=True, blank=True)
     recipe_url = models.URLField(max_length=200, null=True, blank=True)
 
@@ -19,7 +19,7 @@ class MenuItem(models.Model):
 class RecipeRequirement(models.Model):
     menu_item = models.ForeignKey(MenuItem, on_delete=models.CASCADE)
     ingredient = models.ForeignKey(Ingredient, on_delete=models.CASCADE)
-    quantity = models.IntegerField()
+    quantity = models.FloatField()
 
 
 class Purchase(models.Model):
