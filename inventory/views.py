@@ -1,10 +1,22 @@
 from .models import Ingredient, MenuItem, RecipeRequirement, Purchase
 from django.shortcuts import render
-from django.views.generic import ListView
+from django.views.generic import ListView, TemplateView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 
 # Create your views here.
+class HomeView(TemplateView):
+    template_name = "home.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['Ingredients'] = Ingredient.objects.all()
+        context['menu_items'] = MenuItem.objects.all()
+        context['recipe_requirements'] = RecipeRequirement.objects.all()
+        context['purchases'] = Purchase.objects.all()
+        return context
+
+
 class IngredientView(ListView):
     model = Ingredient
     template_name = "inventory/Ingredient.html"    
