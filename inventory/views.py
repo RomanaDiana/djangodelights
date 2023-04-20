@@ -47,3 +47,23 @@ class UpdateMenuItemView(UpdateView):
 class DeleteMenuItemView(DeleteView):
     model = MenuItem
     success_url = reverse_lazy('menu')
+
+
+class RecipeRequirementView(ListView):
+    model = RecipeRequirement
+    template_name = "inventory/recipe_requirement.html"
+
+
+class CreateRecipeRequirementView(CreateView):
+    model = RecipeRequirement
+    template_name = "inventory/reciperequirement_create_form.html"
+    
+
+class UpdateRecipeRequirementView(UpdateView):
+    model = RecipeRequirement
+    template_name = "inventory/reciperequirement_update_form.html"
+
+
+class DeleteRecipeRequirementView(DeleteView):
+    model = RecipeRequirement
+    success_url = reverse_lazy('recipe_requirements')
