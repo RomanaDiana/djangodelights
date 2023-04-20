@@ -25,3 +25,25 @@ class UpdateIngredientView(UpdateView):
 class DeleteIngredientView(DeleteView):
     model = Ingredient
     success_url = reverse_lazy("ingredients")
+
+
+class MenuItemView(ListView):
+    model = MenuItem
+    template_name = "inventory/menu.html"
+
+
+class CreateMenuItemView(CreateView):
+    model = MenuItem
+    template_name = "inventory/menuitem_create_form.html"
+    fields = ["title", "price", "image_url", "recipe_url"]
+
+
+class UpdateMenuItemView(UpdateView):
+    model = MenuItem
+    template_name = "inventory/menuitem_update_form.html"
+    fields = ["title", "price", "image_url", "recipe_url"]
+
+
+class DeleteMenuItemView(DeleteView):
+    model = MenuItem
+    success_url = reverse_lazy('menu')
