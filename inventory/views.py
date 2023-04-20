@@ -67,3 +67,25 @@ class UpdateRecipeRequirementView(UpdateView):
 class DeleteRecipeRequirementView(DeleteView):
     model = RecipeRequirement
     success_url = reverse_lazy('recipe_requirements')
+
+
+class PurchaseView(ListView):
+    model = Purchase
+    template_name = "inventory/purchase.html"
+
+
+class CreatePurchaseView(CreateView):
+    model = Purchase
+    template_name = "inventory/purchase_create_form.html"
+    fields = ["menu_item", "timestamp"]
+
+
+class UpdatePurchaseView(UpdateView):
+    model = Purchase
+    template_name = "inventory/purchase_update_form.html"
+    fields = ["menu_item", "timestamp"]
+
+
+class DeletePurchaseView(DeleteView):
+    model = Purchase
+    success_url = reverse_lazy('purchases')
