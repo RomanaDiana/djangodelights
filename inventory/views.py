@@ -86,10 +86,29 @@ class PurchaseView(ListView):
     template_name = "inventory/purchase.html"
 
 
-class CreatePurchaseView(CreateView):
-    model = Purchase
+class CreatePurchaseView(TemplateView):
     template_name = "inventory/purchase_create_form.html"
-    fields = ["menu_item", "timestamp"]
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["menu_items"] = [X for X in MenuItem.objects.all() if X.available()]
+        return context
+    
+    def check(self, request):
+        menu_item_id = request.POST["menu_item"] #Whether menu_item was submitted
+        menu_item = MenuItem.objects.get(pk=menu_item_id) #get the id of an item from the form
+        requirements = menu_item.reciperequirement_set #get all reciperequirement instances related to that id
+        purchase = Purchase(menu_item=menu_item)
+
+        for requirement in requirements.all():
+            required_ingredient = requirement.ingredient
+            required_ingredient.quantity -= requirement.quantity #inventory minus requirement
+            required_ingredient.save()
+
+        purchase.save()
+        
+
+
 
 
 class UpdatePurchaseView(UpdateView):
