@@ -1,4 +1,5 @@
 from .models import Ingredient, MenuItem, RecipeRequirement, Purchase
+from django.db.models import Sum
 from django.shortcuts import render
 from django.views.generic import ListView, TemplateView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
@@ -108,9 +109,6 @@ class CreatePurchaseView(TemplateView):
         purchase.save()
         
 
-
-
-
 class UpdatePurchaseView(UpdateView):
     model = Purchase
     template_name = "inventory/purchase_update_form.html"
@@ -120,3 +118,25 @@ class UpdatePurchaseView(UpdateView):
 class DeletePurchaseView(DeleteView):
     model = Purchase
     success_url = reverse_lazy('purchases')
+
+
+class ReportView(TemplateView):
+    template_name = "inventory/report.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["purchases"] = Purchase.objects.all()
+        revenue = Purchase.objects.aggregate(
+            revenue = Sum("menu_item__price")
+        )
+        total_cost = 0
+        for purchase in Purchase.objects.all():
+            for reciperequirement in purchase.menu_item.reciperequirement_set.all():
+                total_cost += reciperequirement.ingredient.unit_price * \
+                    reciperequirement.quantity
+        
+        context["revenue"] = revenue
+        context["total_cost"] = total_cost
+        context["profit"] = revenue - total_cost
+
+        return context
